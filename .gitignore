@@ -1,0 +1,22 @@
+# 忽略构建文件夹
+build/
+
+# 忽略编译输出文件
+*.o
+*.obj
+*.exe
+
+# 忽略临时文件
+*.tmp
+*.swp
+
+# 忽略IDE配置文件
+.vscode/
+.idea/
+
+# 忽略依赖库的预编译文件
+lib/
+bin/
+
+# 忽略user文件
+*.user

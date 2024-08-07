@@ -1,0 +1,191 @@
+/* style.qss */
+
+#CalculatorWindow {
+    background-color: whitesmoke;
+}
+
+.historyBtn {
+    height: 25%;
+    border: none;
+    background-color: rgb(190, 190, 190);
+    border-radius: 12px;
+}
+
+.historyBtn:hover {
+    background-color: rgb(170, 170, 170);
+}
+
+.historyBtn:pressed {
+    background-color: rgb(150, 150, 150);
+}
+
+.historyBtn:checked {
+    background-color: rgb(255, 102, 0);
+
+}
+
+.displayLine {
+    height: 60px;
+    background-color: #f0f0f0;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.calculateBtn {
+    height: 60%;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    margin: 4px 2px;
+    border-radius: 8px;
+}
+
+.numericBtn,
+.specialSymbolsBtn {
+    color: #333;
+    background-color: #dddddd;
+}
+
+.numericBtn:hover,
+.specialSymbolsBtn:hover {
+    background-color: #c1c1c1;
+}
+
+.numericBtn:pressed,
+.specialSymbolsBtn:pressed {
+    background-color: #b3b3b3;
+}
+
+.equalBtn {
+    color: whitesmoke;
+    background-color: rgb(255, 102, 0); /* 偏红的橙色 */
+}
+
+.equalBtn:hover {
+    background-color: rgb(230, 90, 0); /* 稍微变暗的偏红橙色 */
+}
+
+.equalBtn:pressed {
+    background-color: rgb(200, 80, 0); /* 更暗的偏红橙色 */
+}
+
+.mathOperatorsBtn {
+    color: rgb(255, 102, 0);
+    background-color: rgb(255, 200, 150); /* 浅一点的偏红橙色 */
+}
+
+.mathOperatorsBtn:hover {
+    background-color: rgb(230, 180, 130); /* 稍微变暗的浅偏红橙色 */
+}
+
+.mathOperatorsBtn:pressed {
+    background-color: rgb(210, 160, 110); /* 更暗的浅偏红橙色 */
+}
+
+.FunctionsBtn {
+    color: rgb(255, 102, 0);
+    background-color: #dddddd;
+}
+
+.FunctionsBtn:hover {
+    background-color: #c1c1c1;
+}
+
+.FunctionsBtn:pressed {
+    background-color: #b3b3b3;
+}
+
+.otherBtn {
+    color: #737373;
+    background-color: #dddddd;
+}
+
+.otherBtn:hover {
+    background-color: #c1c1c1;
+}
+
+.otherBtn:pressed {
+    background-color: #b3b3b3;
+}
+
+.historySidebar {
+    background-color: #f0f0f0;
+}
+
+.historyList {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+}
+
+.historyList::item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.historyList::item:hover {
+    background-color: rgb(255, 200, 150);
+}
+
+.historyList::item:selected {
+    background-color: rgb(255, 102, 0);
+    color: white;
+    border-radius: 5px;                /* 设置圆角 */
+}
+
+/* 针对historyList的滚动条样式 */
+.historyList QScrollBar:vertical {
+    width: 10px;            /* 滚动条宽度 */
+    border-radius: 5px;     /* 圆角 */
+}
+
+.historyList QScrollBar::handle:vertical {
+    background: #ff8c00;    /* 滚动块颜色 - 使用暖色调 */
+    min-height: 20px;       /* 最小高度 */
+    border-radius: 5px;     /* 圆角 */
+}
+
+.historyList QScrollBar::handle:vertical:hover {
+    background: #ff7f00;    /* 悬停时的颜色 - 略微加深 */
+}
+
+.historyList QScrollBar::add-line:vertical,
+.historyList QScrollBar::sub-line:vertical {
+    width: 0;               /* 隐藏上下控制按钮 */
+    height: 0;
+    background: none;       /* 确保无背景 */
+}
+
+.historyList QScrollBar::add-page:vertical,
+.historyList QScrollBar::sub-page:vertical {
+    background: none;       /* 不显示上下空白区域 */
+}
+
+/* 针对historyList的水平滚动条样式 */
+.historyList QScrollBar:horizontal {
+    height: 10px;           /* 滚动条高度 */
+    border-radius: 5px;     /* 圆角 */
+}
+
+.historyList QScrollBar::handle:horizontal {
+    background: #ff8c00;    /* 滚动块颜色 - 使用暖色调 */
+    min-width: 20px;        /* 最小宽度 */
+    border-radius: 5px;     /* 圆角 */
+}
+
+.historyList QScrollBar::handle:horizontal:hover {
+    background: #ff7f00;    /* 悬停时的颜色 - 略微加深 */
+}
+
+.historyList QScrollBar::add-line:horizontal,
+.historyList QScrollBar::sub-line:horizontal {
+    background: none; /* 不显示左右控制按钮 */
+}
+
+.historyList QScrollBar::add-page:horizontal,
+.historyList QScrollBar::sub-page:horizontal {
+    background: none; /* 不显示左右空白区域 */
+}
+
