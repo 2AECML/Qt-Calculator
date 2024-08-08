@@ -15,8 +15,7 @@ CalculatorWindow::CalculatorWindow(QWidget *parent)
     : QWidget(parent),
     mDisplay(nullptr),
     mCalculator(new Calculator()),
-    mValidator(new ExpressionValidator()),
-    mHistoryManager(new HistoryManager()){
+    mValidator(new ExpressionValidator()){
     initUi(); // 初始化UI
     setupConnections(); // 设置信号与槽的连接
 }
@@ -75,7 +74,8 @@ void CalculatorWindow::handleButtonClick(const QString &text) {
     else if (text == "=") {
         QString result = mCalculator->getStringResult(expression); // 计算结果
         if (result != "ERROR") {
-            mHistoryManager->addRecord(expression, result, QDateTime::currentDateTime()); // 添加历史记录
+            HistoryManager& historyManager = HistoryManager::getInstance();
+            historyManager.addRecord(expression, result, QDateTime::currentDateTime()); // 添加历史记录
         }
         mDisplay->setText(result); // 显示结果
     }
@@ -90,7 +90,8 @@ void CalculatorWindow::toggleHistorySidebar() {
 
     if (!mHistorySidebar->isVisible()) {    // 若侧边栏不可见，加载历史记录并显示
         mHistoryButton->setChecked(true);
-        QVector<HistoryRecord> records = mHistoryManager->getRecords();
+        HistoryManager& historyManager = HistoryManager::getInstance();
+        QVector<HistoryRecord> records = historyManager.getRecords();
         mHistoryList->clear();
         for (const auto& record : records) {
             // 创建历史记录项并设置数据
@@ -171,7 +172,8 @@ void CalculatorWindow::onItemClickedRight(QListWidgetItem *item) {
             // 从 mHistoryList 中移除该项
             mHistoryList->removeItemWidget(item);
             // 从 mHistoryManager 中删除该记录
-            mHistoryManager->removeRecord(item->data(Qt::UserRole).toInt());
+            HistoryManager& historyManager = HistoryManager::getInstance();
+            historyManager.removeRecord(item->data(Qt::UserRole).toInt());
             // 手动删除项
             delete item;
         });
@@ -184,7 +186,8 @@ void CalculatorWindow::onItemClickedRight(QListWidgetItem *item) {
                 delete item;
             }
             // 从 mHistoryManager 中删除所有记录
-            mHistoryManager->clearAllRecords();
+            HistoryManager& historyManager = HistoryManager::getInstance();
+            historyManager.clearAllRecords();
         });
 
         // 显示 QMenu 并跟踪鼠标位置

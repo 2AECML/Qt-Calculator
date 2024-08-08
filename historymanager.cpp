@@ -2,43 +2,19 @@
 
 #include <QDebug>
 #include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
 
-// 构造函数，初始化数据库
-HistoryManager::HistoryManager() {
-    initDatabase();
-}
+// 初始化静态成员变量
+HistoryManager HistoryManager::mInstance;
+QSqlDatabase* HistoryManager::mDatabase = nullptr;
+bool HistoryManager::mIsDatabaseInitialized = false;
 
-// 析构函数，关闭数据库连接
-HistoryManager::~HistoryManager()
-{
-    if (mDatabase) {
-        if (mDatabase->isOpen()) {
-            mDatabase->close();
-        }
+HistoryManager& HistoryManager::getInstance() {
+    if (!mIsDatabaseInitialized) {
+        initDatabase();
+        mIsDatabaseInitialized = true;
     }
-}
-
-// 初始化数据库
-void HistoryManager::initDatabase()
-{
-    // 创建数据库连接
-    mDatabase.reset(new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE")));
-    mDatabase->setDatabaseName("calculator_history.db");
-
-    // 打开数据库连接
-    if (!mDatabase->open()) {
-        qDebug() << "Error: connection with database failed";
-    }
-    else {
-        // 创建表
-        qDebug() << "Database: connection ok";
-        QSqlQuery query;
-        query.exec("CREATE TABLE IF NOT EXISTS history ("
-                   "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                   "expression TEXT, "
-                   "result TEXT, "
-                   "timestamp DATETIME)");
-    }
+    return mInstance;
 }
 
 // 添加记录
@@ -68,10 +44,10 @@ QVector<HistoryRecord> HistoryManager::getRecords() const {
     // 遍历查询结果
     while (query.next()) {
         HistoryRecord record;
-        record.id = query.value(0).toInt();
-        record.expression = query.value(1).toString();
-        record.result = query.value(2).toString();
-        record.timestamp = QDateTime::fromString(query.value(3).toString(), Qt::ISODate);
+        record.id = query.value("id").toInt();
+        record.expression = query.value("expression").toString();
+        record.result = query.value("result").toString();
+        record.timestamp = QDateTime::fromString(query.value("timestamp").toString(), Qt::ISODate);
         records.append(record);
     }
 
@@ -96,4 +72,47 @@ bool HistoryManager::clearAllRecords()
     // 准备并执行 SQL 删除语句
     QSqlQuery query;
     return query.exec("DELETE FROM history");
+}
+
+HistoryManager::HistoryManager() {
+
+}
+
+// 析构函数，关闭数据库连接
+HistoryManager::~HistoryManager()
+{
+    if (mDatabase) {
+        if (mDatabase->isOpen()) {
+            mDatabase->close();
+        }
+        delete mDatabase;
+        mDatabase = nullptr;
+    }
+
+}
+
+// 初始化数据库
+void HistoryManager::initDatabase()
+{
+    qDebug() << QSqlDatabase::drivers();
+
+    // 创建数据库连接
+    mDatabase = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE"));
+    mDatabase->setDatabaseName("calculator_history.db");
+
+    // 打开数据库连接
+    if (!mDatabase->open()) {
+        qDebug() << "Error: connection with database failed: " << mDatabase->lastError();
+    }
+    else {
+        // 创建表
+        qDebug() << "Database: connection ok";
+        QSqlQuery query;
+        query.exec("CREATE TABLE IF NOT EXISTS history ("
+                   "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                   "expression TEXT, "
+                   "result TEXT, "
+                   "timestamp DATETIME)");
+    }
+
 }

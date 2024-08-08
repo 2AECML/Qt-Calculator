@@ -62,6 +62,5 @@ private:
     QList<QString> mStyleSheetFilePaths; // 样式表文件路径列表
     QScopedPointer<Calculator> mCalculator; // 计算器对象
     QScopedPointer<ExpressionValidator> mValidator; // 表达式验证器对象
-    QScopedPointer<HistoryManager> mHistoryManager; // 历史记录管理器对象
 };
 #endif // CALCULATORWINDOW_H
