@@ -69,6 +69,7 @@ bool HistoryManager::clearAllRecords() {
     return query.exec("DELETE FROM history");
 }
 
+// 构造函数，连接数据库
 HistoryManager::HistoryManager() {
     initDatabase();
 }
