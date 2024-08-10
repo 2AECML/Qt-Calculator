@@ -1,25 +1,21 @@
 #include "historymanager.h"
-
 #include <QDebug>
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
 
 // 初始化静态成员变量
-HistoryManager HistoryManager::mInstance;
-QSqlDatabase* HistoryManager::mDatabase = nullptr;
-bool HistoryManager::mIsDatabaseInitialized = false;
+std::unique_ptr<HistoryManager, HistoryManager::InstanceDeleter> HistoryManager::mInstance = nullptr;
 
-HistoryManager& HistoryManager::getInstance() {
-    if (!mIsDatabaseInitialized) {
-        initDatabase();
-        mIsDatabaseInitialized = true;
+// 获取单例对象
+HistoryManager* HistoryManager::getInstance() {
+    if (!mInstance) {
+        mInstance.reset(new HistoryManager());
     }
-    return mInstance;
+    return mInstance.get();
 }
 
 // 添加记录
-bool HistoryManager::addRecord(const QString& expression, const QString& result, const QDateTime& timestamp)
-{
+bool HistoryManager::addRecord(const QString& expression, const QString& result, const QDateTime& timestamp) {
     // 准备 SQL 插入语句
     QSqlQuery query;
     query.prepare("INSERT INTO history (expression, result, timestamp) VALUES (:expression, :result, :timestamp)");
@@ -67,37 +63,30 @@ bool HistoryManager::removeRecord(int id) {
 }
 
 // 清空记录
-bool HistoryManager::clearAllRecords()
-{
+bool HistoryManager::clearAllRecords() {
     // 准备并执行 SQL 删除语句
     QSqlQuery query;
     return query.exec("DELETE FROM history");
 }
 
 HistoryManager::HistoryManager() {
-
+    initDatabase();
 }
 
 // 析构函数，关闭数据库连接
-HistoryManager::~HistoryManager()
-{
+HistoryManager::~HistoryManager() {
     if (mDatabase) {
         if (mDatabase->isOpen()) {
             mDatabase->close();
         }
-        delete mDatabase;
-        mDatabase = nullptr;
     }
-
 }
 
 // 初始化数据库
-void HistoryManager::initDatabase()
-{
-    qDebug() << QSqlDatabase::drivers();
+void HistoryManager::initDatabase() {
 
     // 创建数据库连接
-    mDatabase = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE"));
+    mDatabase.reset(new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE")));
     mDatabase->setDatabaseName("calculator_history.db");
 
     // 打开数据库连接
@@ -114,5 +103,4 @@ void HistoryManager::initDatabase()
                    "result TEXT, "
                    "timestamp DATETIME)");
     }
-
 }

@@ -3,7 +3,6 @@
 
 #include "calculator.h"
 #include "expressionvalidator.h"
-#include "historymanager.h"
 #include "customlistwidget.h"
 #include <QWidget>
 #include <QLineEdit>
